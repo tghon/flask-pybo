@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-3">
+    <h2 class="border-bottom py-2">{{ list.name }}</h2>
+    <div class="card my-3">
+      <div class="card-body">
+        <div class="card-text" style="white-space: pre-line;">서비스 이름 : {{ list.service|markdown }}</div>
+        <div class="card-text" style="white-space: pre-line;">롤 : {{ list.role|markdown  }}</div>
+          <div class="d-flex justify-content-end">
+            {%if list.modify_date %}
+            <div class="p-2 text-left mx-3">
+              <div class="mb-2">modified at</div>
+              <div>{{ list.modify_date|datetime }}</div>
+            </div>
+            {% endif %}
+            <div class="p-2">
+              {{ list.create_date|datetime }}
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="my-3">
+    <a href="{{ url_for('list.modify', list_id=list.id) }}"
+       class="btn btn-sm btn-outline-secondary">수정</a>
+    <a href="#" class=" delete btn btn-sm btn-outline-secondary"
+    data-uri="{{ url_for('list.delete', list_id=list.id) }}">삭제</a>
+  </div>
+    <h5 class="border-bottom my-3 py-2">{{ list.comments_set|length }}개의 Comments가 있습니다.</h5>
+    {% for comment in list.comments_set %}
+    <a name="comments_{{ comment.id }}"</a>
+  <div class="card my-3">
+    <div class="card-body">
+      <div class="card-text" style="white-space: pre-line;">{{  comment.comment|markdown  }}</div>
+      <div class="d-flex justify-content-end">
+          {%if comment.modify_date %}
+            <div class="p-2 text-left mx-3">
+              <div class="mb-2">modified at</div>
+              <div>{{ comment.modify_date|datetime }}</div>
+            </div>
+            {% endif %}
+        <div class="p-2">
+          {{ comment.create_date|datetime }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="my-3">
+    <a href="{{ url_for('comments.modify', comments_id=comment.id) }}"       class="btn btn-sm btn-outline-secondary">수정</a>
+    <a href="#" class="delete btn btn-sm btn-outline-secondary" data-uri="{{ url_for('comments.delete', comments_id=comment.id) }}">삭제</a>
+  </div>
+  {% endfor %}
+  <form action="{{ url_for('comments.create', list_id=list.id) }}" method="post" class="my-3">
+    {{ form.csrf_token }}
+    <!-- 오류포시 Start -->
+    {% for field, errors in form.errors.items() %}
+    <div class="alert alert-danger" role="alert">
+      <strong>{{ form[field].label }}</strong>: {{ ', '.join(errors) }}
+    </div>
+    {% endfor %}
+    <!-- 오류표시 End -->
+    <div class="form-group">
+        <textarea name="comment" id="comment" class="form-control" rows="10"></textarea>
+    </div>
+    <input type="submit" value="Comment등록" class="btn btn-primary">
+  </form>
+</div>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+  $(document).ready(function(){
+    $(".delete").on('click',function(){
+      if(confirm("정말로 삭제하시겠습니까?")){
+        location.href = $(this).data('uri');
+        }
+     });
+  });
+</script>
+{% endblock %}
+

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <h5 class="my-3 border-bottom pb-2">자산등록</h5>
+  <form method="post" class="post-form my-3">
+    {{ form.csrf_token }}
+    <!-- 오류포시 Start -->
+    {% for field, errors in form.errors.items() %}
+    <div class="alert alert-danger" role="alert">
+      <strong>{{ form[field].label }}</strong>: {{ ', '.join(errors) }}
+    </div>
+    {% endfor %}
+    <!-- 오류표시 End -->
+    <div class="form-group">
+      <label for="gubun">구분</label>
+      <input type="text" class="form-control" name="gubun" id="gubun" value="{{ form.gubun.data or ' '}}">
+    </div>
+    <p>
+    <div class="form-group">
+      <label for="service">서비스</label>
+      <input type="text" class="form-control" name="service" id="service" value="{{ form.service.data or ' '}}">
+    </div>
+    </p>
+    <div class="form-group">
+      <label for="name">호스트네임</label>
+      <input type="text" class="form-control" name="name" id="name" value="{{ form.name.data or ' '}}">
+    </div>
+    <p>
+    <div class="form-group">
+      <label for="role">롤</label>
+      <input type="text" class="form-control" name="role" id="role" value="{{ form.role.data or ' '}}">
+    </div>
+    </p>
+    <div class="form-group">
+      <label for="roc">위치</label>
+      <input type="text" class="form-control" name="roc" id="roc" value="{{ form.roc.data or ' '}}">
+    </div>
+    <p>
+    </p>
+
+   <!-- 샘플
+    {{ form.roc.label }}
+    {{ form.roc(class="form-control") }}
+    -->
+
+    <button type="submit" class="btn btn-primary">저장하기</button>
+  </form>
+</div>
+{% endblock %}
